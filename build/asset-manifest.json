@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/tebry-frontend/static/css/main.bff12647.css",
+    "main.js": "/tebry-frontend/static/js/main.bd9b42b8.js",
+    "static/media/login-ilustration.png": "/tebry-frontend/static/media/login-ilustration.9a1c61e17a31a8b0a3c8.png",
+    "static/media/register-ilustration.png": "/tebry-frontend/static/media/register-ilustration.c07b612b653fade618db.png",
+    "static/media/Logo3.png": "/tebry-frontend/static/media/Logo3.2ef2ee1585b07437e985.png",
+    "static/media/dontLike.png": "/tebry-frontend/static/media/dontLike.47e02699660e776218f7.png",
+    "static/media/chat-bubble.png": "/tebry-frontend/static/media/chat-bubble.4f94dfafb1e2f78ad12e.png",
+    "static/media/like.png": "/tebry-frontend/static/media/like.6b1a01ae05c081f0c927.png",
+    "static/media/social-media.png": "/tebry-frontend/static/media/social-media.351e44913c7646184ef0.png",
+    "static/media/chat.png": "/tebry-frontend/static/media/chat.a7dcea619345abc9122e.png",
+    "index.html": "/tebry-frontend/index.html",
+    "main.bff12647.css.map": "/tebry-frontend/static/css/main.bff12647.css.map",
+    "main.bd9b42b8.js.map": "/tebry-frontend/static/js/main.bd9b42b8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bff12647.css",
+    "static/js/main.bd9b42b8.js"
+  ]
+}
