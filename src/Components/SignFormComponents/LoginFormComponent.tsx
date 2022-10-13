@@ -62,7 +62,7 @@ const LoginFormComponent = () => {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:3333/login', {
+            const response = await axios.post('http://194.181.109.242:3333/login', {
                 "login": login,
                 "password": password
             });

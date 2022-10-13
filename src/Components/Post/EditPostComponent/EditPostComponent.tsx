@@ -33,13 +33,13 @@ const EditPostComponent = () => {
     }
 
     const EditPost = async () => {
-        const postId = await axios.post('http://localhost:3333/findPost', {
+        const postId = await axios.post('http://194.181.109.242:3333/findPost', {
             "title": params.postTitle,
             "description": params.postDescription,
             "author": store.Login
         })
 
-        const response = await axios.post("http://localhost:3333/post", {
+        const response = await axios.post("http://194.181.109.242:3333/post", {
             "postId": postId.data,
             "title": newTitle,
             "content": newDescription,

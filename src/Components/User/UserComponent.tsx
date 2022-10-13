@@ -26,7 +26,7 @@ const UserComponent = () => {
     useEffect(() => {
         const GetFollowed = async() => {
             try{
-                const response = await axios.post('http://localhost:3333/getFolloweds', {
+                const response = await axios.post('http://194.181.109.242:3333/getFolloweds', {
                     "userLogin": params.userLogin
                 })
                 await setFollowed(response.data[0].length)
@@ -38,7 +38,7 @@ const UserComponent = () => {
 
         const LoadPosts = async () => {
             try {
-                const axiosPosts = await axios.post('http://localhost:3333/getAllUserPosts', {
+                const axiosPosts = await axios.post('http://194.181.109.242:3333/getAllUserPosts', {
                     "login": params.userLogin
                 })
                 await IsFollow()
@@ -61,7 +61,7 @@ const UserComponent = () => {
 
     const GetFollowers = async() => {
         try {
-            const response = await axios.post('http://localhost:3333/getFollowing', {
+            const response = await axios.post('http://194.181.109.242:3333/getFollowing', {
                 "userLogin" : params.userLogin
             })
             await setFollowers(response.data[0].length)
@@ -72,7 +72,7 @@ const UserComponent = () => {
     }
 
     const FollowUser = async () => {
-        const follow = await axios.post('http://localhost:3333/follow', {
+        const follow = await axios.post('http://194.181.109.242:3333/follow', {
             "login": store.Login,
             "token": store.Token,
             "loginToFollow": params.userLogin
@@ -93,7 +93,7 @@ const UserComponent = () => {
     }
 
     const GetInfoUser = async () =>{
-        const infoUser = await axios.post('http://localhost:3333/getInfo', {
+        const infoUser = await axios.post('http://194.181.109.242:3333/getInfo', {
             "login": params.userLogin,
         })
         setUserFirstName(infoUser.data.FirstName)
@@ -102,7 +102,7 @@ const UserComponent = () => {
 
     const IsFollow = async () => {
         try{
-            const isFollow = await axios.post('http://localhost:3333/isFollowing', {
+            const isFollow = await axios.post('http://194.181.109.242:3333/isFollowing', {
                 "followingUserId": store.Login,
                 "followUserId": params.userLogin
             })

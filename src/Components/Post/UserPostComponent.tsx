@@ -44,7 +44,7 @@ const UserPostComponent = (post: IPost) => {
 
     const IsPostLiked = async () => {
         try {
-            const response = await axios.post('http://localhost:3333/findPost', {
+            const response = await axios.post('http://194.181.109.242:3333/findPost', {
                 "title": post.title,
                 "description": post.description,
                 "author": post.author
@@ -53,7 +53,7 @@ const UserPostComponent = (post: IPost) => {
             const postId = response.data;
             setPostId(response.data)
 
-            const isLiked = await axios.post('http://localhost:3333/isPostLiked', {
+            const isLiked = await axios.post('http://194.181.109.242:3333/isPostLiked', {
                 "postId": postId,
                 "login": store.Login
             })
@@ -67,7 +67,7 @@ const UserPostComponent = (post: IPost) => {
     const LikePost = async () => {
 
         try {
-            const response = await axios.post('http://localhost:3333/findPost', {
+            const response = await axios.post('http://194.181.109.242:3333/findPost', {
                 "title": post.title,
                 "description": post.description,
                 "author": post.author
@@ -75,7 +75,7 @@ const UserPostComponent = (post: IPost) => {
 
             const postId = response.data;
 
-            await axios.post('http://localhost:3333/like', {
+            await axios.post('http://194.181.109.242:3333/like', {
                 "postId": postId,
                 "login": store.Login,
                 "token": store.Token

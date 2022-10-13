@@ -18,7 +18,7 @@ const CreateCommentComponent = () => {
 
     const CreateComment = async () => {
         try{
-            const response = await axios.post('http://localhost:3333/addComment', {
+            const response = await axios.post('http://194.181.109.242:3333/addComment', {
                 "postId": params.postId,
                 "comment": comment,
                 "login": store.Login,

@@ -78,8 +78,6 @@ const NavbarComponent =(props: ButtonProps) => {
 
     const LogOut = async () => {
         try {
-            axios.patch('https://localhost:7188/account/accessToken?login=' + secureLocalStorage.getItem("Login") + '&oldToken=' + secureLocalStorage.getItem("Token") + '&delete=true')
-
             navigate("/login")
         }
 

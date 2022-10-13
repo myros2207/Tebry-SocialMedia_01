@@ -17,7 +17,7 @@ const CommentsListComponent = () => {
 
     useEffect(() => {
         const GetComments = async () => {
-            const response = await axios.post('http://localhost:3333/getAllCommentsFromPost', {
+            const response = await axios.post('http://194.181.109.242:3333/getAllCommentsFromPost', {
                 "postId": params.postId
             })
             if (response.data.length === 0) {

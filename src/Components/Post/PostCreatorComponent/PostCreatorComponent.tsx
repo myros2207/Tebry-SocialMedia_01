@@ -38,7 +38,7 @@ const PostCreatorComponent = () => {
             return
         }
 
-        const response = await axios.post("http://localhost:3333/post", {
+        const response = await axios.post("http://194.181.109.242:3333/post", {
             "postId": "0",
             "title": title.toString(),
             "content": description.toString(),

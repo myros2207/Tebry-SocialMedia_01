@@ -29,7 +29,7 @@ const NewsListComponent = () => {
     }, [isVisible])
 
     const GetPosts = async () => {
-        const response = await axios.post('http://localhost:3333/getNews', {
+        const response = await axios.post('http://194.181.109.242:3333/getNews', {
             "amountToGet": postsToGet.current
         });
         setPosts(response.data[0]);

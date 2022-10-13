@@ -56,14 +56,14 @@ const YourPostComponent = (post: IPost) => {
         const navigate = useNavigate();
 
         const DeletePost = async () => {
-            const postId = await axios.post('http://localhost:3333/findPost', {
+            const postId = await axios.post('http://194.181.109.242:3333/findPost', {
                 "title": title,
                 "description": content,
                 "author": store.Login
             });
 
 
-            await axios.delete('http://localhost:3333/removePost', {
+            await axios.delete('http://194.181.109.242:3333/removePost', {
                 data: {
                     "postId": postId.data.toString(),
                     "login": store.Login,

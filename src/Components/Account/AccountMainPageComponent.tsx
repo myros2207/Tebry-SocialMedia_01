@@ -35,7 +35,7 @@ const AccountMainPageComponent = () => {
     useEffect(() => {
         const GetFollowers = async () => {
 
-            const response = await axios.post('http://localhost:3333/getFollowing', {
+            const response = await axios.post('http://194.181.109.242:3333/getFollowing', {
                 "userLogin": youLogin
             })
             await setFollowers(response.data[0].length)
@@ -49,7 +49,7 @@ const AccountMainPageComponent = () => {
 
     const GetFollowed = async () => {
 
-        const response = await axios.post('http://localhost:3333/getFolloweds', {
+        const response = await axios.post('http://194.181.109.242:3333/getFolloweds', {
             "userLogin": secureLocalStorage.getItem("Login")
         })
         await setFollowed(response.data[0].length)
@@ -57,7 +57,7 @@ const AccountMainPageComponent = () => {
     }
 
     const GetYouInfo = async () => {
-        const info = await axios.post('http://localhost:3333/getInfo', {
+        const info = await axios.post('http://194.181.109.242:3333/getInfo', {
             "login": secureLocalStorage.getItem("Login"),
         })
 

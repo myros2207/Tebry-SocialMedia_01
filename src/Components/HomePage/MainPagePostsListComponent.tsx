@@ -34,7 +34,7 @@ const MainPagePostsListComponent = () => {
     }, [isVisible])
 
     const GetPosts = async () => {
-        const response = await axios.post('http://localhost:3333/getPosts', {
+        const response = await axios.post('http://194.181.109.242:3333/getPosts', {
             "amountToGet": postsToGet.current,
             "login": store.Login
         });
