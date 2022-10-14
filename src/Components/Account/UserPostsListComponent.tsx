@@ -19,7 +19,7 @@ const UserPostsListComponent = () => {
     useEffect(() => {
         const LoadPosts = async () => {
             try {
-                const axiosPosts = await axios.post('http://localhost:3333/getAllUserPosts', {
+                const axiosPosts = await axios.post('http://194.181.109.242:3333/getAllUserPosts', {
                     "login": store.Login
                 })
                 if (axiosPosts.data[0].length === 0) {
