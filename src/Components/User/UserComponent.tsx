@@ -125,7 +125,7 @@ const UserComponent = () => {
         <>
             <NavbarComponent></NavbarComponent>
 
-            <Container>
+            <Container pt={["4.5rem", "0"]}>
                 <Center py={6}>
                     <Box
                         maxW={'40rem'}
