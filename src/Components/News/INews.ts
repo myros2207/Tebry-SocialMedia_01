@@ -1,5 +1,6 @@
 export interface INews{
-    newsTitle: string;
-    newsContent: string;
-    date:string
+    NewsId: string;
+    NewsTitle: string;
+    NewsContent: string;
+    NewsAuthor: string;
 }

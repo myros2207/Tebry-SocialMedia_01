@@ -32,11 +32,7 @@ const SearchingComponent = () => {
     const GetResults = async () => {
         try{
 
-            const response = await axios.get("http://localhost:3333/findUser", {
-                // @ts-ignore
-                "firstName": search
-            })
-            setResult(response.data)
+            //
         }
         catch {
             setResult([])

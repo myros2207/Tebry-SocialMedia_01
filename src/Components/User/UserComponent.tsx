@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import UserPostComponent from "../Post/UserPostComponent";
 import {IPost} from "../Post/Abstract/IPost";
 import NavbarComponent from "../UI/NavbarComponent";
 import {Avatar, Box, Button, Center, Container, Flex, Heading, Stack, Text, useColorModeValue} from "@chakra-ui/react";
-import secureLocalStorage from "react-secure-storage";
 import FooterComponent from "../UI/FooterComponent";
 import {useSelector} from "react-redux";
 import {State} from "../../redux/reducers/MainReducer";
@@ -15,6 +14,8 @@ const UserComponent = () => {
 
     const params = useParams();
 
+    const navigate = useNavigate();
+
     const [posts, setPosts] = useState<IPost[]>([]);
     const [isFollowing, setIsFollowing] = useState<boolean>(false)
     const [followers, setFollowers] = useState<number>(0)
@@ -22,14 +23,31 @@ const UserComponent = () => {
     const [statusFollowing, setSatatusFollowing] = useState<any>("")
     const [userFirstName, setUserFirstName] = useState("")
     const [userSecondName, setUserSecondName] = useState("")
+    const [role, setRole] = useState("")
 
     useEffect(() => {
-        const GetFollowed = async() => {
+        const LoadInfo = async() => {
             try{
-                const response = await axios.post('http://194.181.109.242:3333/getFolloweds', {
-                    "userLogin": params.userLogin
+                const response = await axios.post('http://194.181.109.242:3333/getAllAccountInfo', {
+                    "login": params.userLogin
                 })
-                await setFollowed(response.data[0].length)
+
+                console.log(response.data)
+
+                if(response.data.Followers.includes(store.Login)){
+                    setIsFollowing(true)
+                    setSatatusFollowing(<Text>Unfollow</Text>)
+                }
+                else{
+                    setIsFollowing(false)
+                    setSatatusFollowing(<Text>Follow</Text>)
+                }
+
+                setFollowers(response.data.Followers.length)
+                setFollowed(response.data.Followed.length)
+                setUserFirstName(response.data.FirstName)
+                setUserSecondName(response.data.SecondName)
+                setRole(response.data.Role)
             }
             catch{
                 setFollowed(0)
@@ -38,14 +56,13 @@ const UserComponent = () => {
 
         const LoadPosts = async () => {
             try {
-                const axiosPosts = await axios.post('http://194.181.109.242:3333/getAllUserPosts', {
-                    "login": params.userLogin
+                const axiosPosts = await axios.post('http://194.181.109.242:3333/getAllChoosedUserPosts', {
+                    "login": store.Login,
+                    "userLogin": params.userLogin
                 })
-                await IsFollow()
-                await setPosts(axiosPosts.data[0])
-                await GetFollowers()
-                await GetFollowed()
-                await GetInfoUser()
+
+                await setPosts(axiosPosts.data)
+                await LoadInfo()
 
 
                 console.log(isFollowing)
@@ -55,21 +72,20 @@ const UserComponent = () => {
             }
         }
 
+        const CheckAccount = () => {
+            if(params.userLogin === store.Login) {
+                navigate("/myAccount")
+            }
+            else{
+                return
+            }
+        }
+
+        CheckAccount()
         LoadPosts();
 
     }, []);
 
-    const GetFollowers = async() => {
-        try {
-            const response = await axios.post('http://194.181.109.242:3333/getFollowing', {
-                "userLogin" : params.userLogin
-            })
-            await setFollowers(response.data[0].length)
-        }
-        catch{
-
-        }
-    }
 
     const FollowUser = async () => {
         const follow = await axios.post('http://194.181.109.242:3333/follow', {
@@ -77,6 +93,7 @@ const UserComponent = () => {
             "token": store.Token,
             "loginToFollow": params.userLogin
         })
+
         console.log(follow.data)
 
         if (follow.data === true){
@@ -88,32 +105,16 @@ const UserComponent = () => {
             setIsFollowing(false)
             setSatatusFollowing(<Text>Follow</Text>)
         }
-        await GetFollowers()
         await IsFollow()
-    }
-
-    const GetInfoUser = async () =>{
-        const infoUser = await axios.post('http://194.181.109.242:3333/getInfo', {
-            "login": params.userLogin,
-        })
-        setUserFirstName(infoUser.data.FirstName)
-        setUserSecondName(infoUser.data.SecondName)
     }
 
     const IsFollow = async () => {
         try{
-            const isFollow = await axios.post('http://194.181.109.242:3333/isFollowing', {
-                "followingUserId": store.Login,
-                "followUserId": params.userLogin
+            const response = await axios.post('http://194.181.109.242:3333/followers', {
+                "login": store.Login
             })
-
-            if (isFollow.data === true) {
-                setIsFollowing(true);
-                setSatatusFollowing(<Text>Unfollow</Text>)
-            } else {
-                setIsFollowing(false)
-                setSatatusFollowing(<Text>Follow</Text>)
-            }
+            console.log(response.data)
+            setFollowers(response.data.length)
         }
         catch{
             console.log("error :)")
@@ -150,7 +151,7 @@ const UserComponent = () => {
                                     <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
                                         {userFirstName} {userSecondName}
                                     </Heading>
-                                    <Text color={'gray.500'}>Uczen (potom)</Text>
+                                    <Text color={'gray.500'}>{role}</Text>
                                 </Stack>
                             </Box>
                             <Container>
@@ -193,12 +194,7 @@ const UserComponent = () => {
                     </Box>
                 </Center>
 
-
-
-
-
-
-                <h1>{posts.map(post => <UserPostComponent title={post.title} description={post.description} author={post.author}/>)}</h1>
+                {posts.map((post, index) => <UserPostComponent PostId={post.PostId} PostTitle={post.PostTitle} PostContent={post.PostContent} PostAuthor={post.PostAuthor} IsLiked={post.IsLiked} key={index}/>)}
             </Container>
             <FooterComponent></FooterComponent>
         </>

@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import {ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import secureLocalStorage from "react-secure-storage";
 import {useSelector} from "react-redux";
 import {State} from "../../redux/reducers/MainReducer";
 
@@ -17,8 +16,8 @@ const UserPostComponent = (post: IPost) => {
 
     const store = useSelector((state: State) => state)
 
-    const [isLiked, setIsLiked] = useState<boolean>(false)
-    const [postId, setPostId] = useState<number>(-1)
+    const [isLiked, setIsLiked] = useState<boolean>(post.IsLiked)
+    const [postId, setPostId] = useState<string>(post.PostId.toString())
 
     const [show, setShow] = React.useState(false)
     const handleToggle = () => setShow(!show)
@@ -34,27 +33,19 @@ const UserPostComponent = (post: IPost) => {
 
     useEffect(() => {
         const ChekLongDescription = async () => {
-            if(post.description.length > 230){
+            if(post.PostContent.length > 230){
                 setIsMorreText(true)
             }
-            await  IsPostLiked()
         }
        ChekLongDescription()
     }, [])
 
     const IsPostLiked = async () => {
         try {
-            const response = await axios.post('http://194.181.109.242:3333/findPost', {
-                "title": post.title,
-                "description": post.description,
-                "author": post.author
-            });
-
-            const postId = response.data;
-            setPostId(response.data)
+            setPostId(post.PostId.toString())
 
             const isLiked = await axios.post('http://194.181.109.242:3333/isPostLiked', {
-                "postId": postId,
+                "postId": post.PostId,
                 "login": store.Login
             })
             setIsLiked(isLiked.data)
@@ -67,16 +58,8 @@ const UserPostComponent = (post: IPost) => {
     const LikePost = async () => {
 
         try {
-            const response = await axios.post('http://194.181.109.242:3333/findPost', {
-                "title": post.title,
-                "description": post.description,
-                "author": post.author
-            });
-
-            const postId = response.data;
-
             await axios.post('http://194.181.109.242:3333/like', {
-                "postId": postId,
+                "postId": post.PostId,
                 "login": store.Login,
                 "token": store.Token
             })
@@ -93,10 +76,10 @@ const UserPostComponent = (post: IPost) => {
 
     const testimonials = [
         {
-            name: post.author,
-            title: post.title,
+            name: post.PostAuthor,
+            title: post.PostTitle,
             role: "potom",
-            content: post.description,
+            content: post.PostContent,
             avatar: "src='https://bit.ly/broken-link'",
         },
 

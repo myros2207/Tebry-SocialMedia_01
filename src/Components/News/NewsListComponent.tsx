@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IPost } from "../Post/Abstract/IPost";
+
 import useElementOnScreen from "../../Hooks/useElementOnScreen";
 import axios from "axios";
-import UserPostComponent from "../Post/UserPostComponent";
 import NewsComponent from "./NewsComponent";
 import { INews } from "./INews";
 
@@ -32,12 +31,13 @@ const NewsListComponent = () => {
         const response = await axios.post('http://194.181.109.242:3333/getNews', {
             "amountToGet": postsToGet.current
         });
-        setPosts(response.data[0]);
+        setPosts(response.data);
+        console.log(response.data)
     }
     
     return (
         <div>
-            <p>{posts.map((n, index) => <NewsComponent newsTitle={n.newsTitle} newsContent={n.newsContent} date={n.date} key={index} />)}</p>
+            <p>{posts.map((n, index) => <NewsComponent NewsId={n.NewsId} NewsTitle={n.NewsTitle} NewsContent={n.NewsContent} NewsAuthor={n.NewsAuthor} key={index} />)}</p>
             <h1 //@ts-ignore
                 ref={containerRef}></h1>
         </div>

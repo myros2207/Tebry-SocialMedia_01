@@ -19,21 +19,23 @@ const UserPostsListComponent = () => {
     useEffect(() => {
         const LoadPosts = async () => {
             try {
-                const axiosPosts = await axios.post('http://localhost:3333/getAllUserPosts', {
+                const axiosPosts = await axios.post('http://194.181.109.242:3333/getAllUserPosts', {
                     "login": store.Login
                 })
-                if (axiosPosts.data[0].length === 0) {
+                if (axiosPosts.data.length === 0) {
                     const dontHavePostImage = require("../../Assets/social-media.png")
                     setDontHavePosts(
                         <Center><Image mb={"-100px"} src={dontHavePostImage}></Image></Center>
                     )
                 }
                 else {
-                    setPosts(axiosPosts.data[0])
+                    setPosts(axiosPosts.data)
                 }
+
+                console.log(axiosPosts.data)
             }
             catch (err) {
-                console.log("-_- error")
+                console.log(err)
             }
         }
         LoadPosts();
@@ -43,7 +45,8 @@ const UserPostsListComponent = () => {
         <Box>
             <>
                 <Box>{dontHavePosts}</Box>
-                {posts.map((post, index) => <YourPostComponent title={post.title} description={post.description} author={post.author} key={index} />).reverse()}</>
+                {posts.map((post, index) => <YourPostComponent PostId={post.PostId} PostAuthor={post.PostAuthor} PostContent={post.PostContent} PostTitle={post.PostTitle} IsLiked={post.IsLiked} key={index} />).reverse()}
+            </>
         </Box>
     );
 };

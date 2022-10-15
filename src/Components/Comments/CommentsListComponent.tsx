@@ -43,7 +43,7 @@ const CommentsListComponent = () => {
     return (
         <div>
             <Box>{dontHaveComments}</Box>
-            <Box mb={"13rem"}>{comments.map((c, i) => <CommentComponent comment={c.comment} author={c.author} key={i} />)}</Box>
+            <Box mb={"13rem"}>{comments.map((c, i) => <CommentComponent content={c.content} author={c.author} key={i} />)}</Box>
         </div>
     );
 };

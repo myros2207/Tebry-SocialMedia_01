@@ -13,7 +13,6 @@ import {
     Stack,
     Heading
 } from "@chakra-ui/react";
-import secureLocalStorage from "react-secure-storage"
 import "./AccounPoastListStyle.css"
 import FooterComponent from "../UI/FooterComponent";
 import {useSelector} from "react-redux";
@@ -26,44 +25,32 @@ const AccountMainPageComponent = () => {
     const [youFirstName, setFirstName] = useState<string>("")
     const [youSecondName, setSecondName] = useState<string>("")
 
-    const [followers, setFollowers] = useState<number>(0)
-    const [followed, setFollowed] = useState<number>(0)
+    const [followers, setFollowers] = useState<string>("0")
+    const [followed, setFollowed] = useState<string>("0")
 
-    const youRole: any = store.Role
+    const [youRole, setYouRole] = useState<string>("")
+
     const youLogin: any = store.Login
 
     useEffect(() => {
         const GetFollowers = async () => {
 
-            const response = await axios.post('http://194.181.109.242:3333/getFollowing', {
-                "userLogin": youLogin
+            const response = await axios.post('http://194.181.109.242:3333/getAllAccountInfo', {
+                "login": store.Login
             })
-            await setFollowers(response.data[0].length)
-            console.log(response.data[0].length + "followers")
 
-            await GetYouInfo()
-            await GetFollowed()
+            setFirstName(response.data.FirstName)
+            setSecondName(response.data.SecondName)
+            setFollowers(response.data.Followers.length)
+            setFollowed(response.data.Followed.length)
+
+            setYouRole(response.data.Role)
+
+            console.log(response.data.Role)
+
         }
         GetFollowers()
     }, []);
-
-    const GetFollowed = async () => {
-
-        const response = await axios.post('http://194.181.109.242:3333/getFolloweds', {
-            "userLogin": secureLocalStorage.getItem("Login")
-        })
-        await setFollowed(response.data[0].length)
-        console.log(response.data[0].length + "followed")
-    }
-
-    const GetYouInfo = async () => {
-        const info = await axios.post('http://194.181.109.242:3333/getInfo', {
-            "login": secureLocalStorage.getItem("Login"),
-        })
-
-        setFirstName(info.data.FirstName)
-        setSecondName(info.data.SecondName)
-    }
 
     return (
         <div>

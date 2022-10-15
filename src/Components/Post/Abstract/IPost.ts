@@ -1,7 +1,9 @@
 export interface IPost{
-    title: string;
-    author: string;
-    description: string;
+    PostId: number;
+    PostTitle: string;
+    PostAuthor: string;
+    PostContent: string;
+    IsLiked: boolean;
 }
 
 export interface TestimonialCardProps {

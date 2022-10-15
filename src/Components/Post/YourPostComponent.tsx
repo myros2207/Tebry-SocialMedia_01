@@ -38,16 +38,16 @@ const YourPostComponent = (post: IPost) => {
     }, [])
 
     const ChekLongDescription = () => {
-        if (post.description.length > 100){
+        if (post.PostContent.length > 100){
             setIsMorreText(true)
         }
     }
     const testimonials = [
         {
             name: 'you',
-            title: post.title,
+            title: post.PostTitle,
             role: youRole,
-            content: post.description,
+            content: post.PostContent,
 
         },
     ];
@@ -163,7 +163,7 @@ const YourPostComponent = (post: IPost) => {
                                 <MenuItem icon={<DeleteIcon />} onClick={DeletePost}>
                                     <Text>Delete</Text>
                                 </MenuItem>
-                                <MenuItem icon={<EditIcon />} onClick={() => { navigate("../myAccount/posts/editPost/" + post.title.toString() + "&" + post.description.toString()) }}>
+                                <MenuItem icon={<EditIcon />} onClick={() => { navigate("../myAccount/posts/editPost/" + post.PostTitle.toString() + "&" + post.PostContent.toString()) }}>
                                     <Text>Edit Post</Text>
                                 </MenuItem>
                             </MenuList>
