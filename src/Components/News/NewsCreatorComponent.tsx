@@ -40,7 +40,7 @@ const NewsCreatorComponent = () => {
 
         const response = await axios.post("http://194.181.109.242:3333/news", {
             "title": title.toString(),
-            "description": description.toString(),
+            "content": description.toString(),
             "login": store.Login,
             "token": store.Token
         });

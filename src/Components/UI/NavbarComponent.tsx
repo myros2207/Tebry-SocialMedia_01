@@ -1,10 +1,9 @@
-import {ReactNode, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
     Box,
     Flex,
     Avatar,
     HStack,
-    Link,
     IconButton,
     Button,
     Menu,
@@ -19,7 +18,6 @@ import {
 
 import {Link as LinkRoute, useNavigate} from "react-router-dom";
 import {HamburgerIcon, CloseIcon, AddIcon,  } from '@chakra-ui/icons';
-import axios from "axios";
 import SearchingComponent from "../SearchingComponent/SearchingComponent";
 import secureLocalStorage from "react-secure-storage";
 import { BsSun, BsMoonStarsFill } from 'react-icons/bs';
@@ -38,7 +36,7 @@ const NavbarComponent =(props: ButtonProps) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-       if (secureLocalStorage.getItem("Role") === "Nauczyciel"){
+       if (store.Role == "4"){
            setRoleNavbar(
 
             <Menu>
