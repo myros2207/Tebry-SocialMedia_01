@@ -56,7 +56,7 @@ const PostCreatorComponent = () => {
     return (
         <div>
             <NavbarComponent></NavbarComponent>
-            <Container mt="3vh">
+            <Container mt={["0", "3vh"]} pt={["5rem", 0]}>
                 <Center>
                     <Text fontSize={["1rem", "3rem"]}>Creat post</Text>
                 </Center>

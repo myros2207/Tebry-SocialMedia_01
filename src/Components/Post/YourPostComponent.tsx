@@ -2,19 +2,24 @@ import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { IPost, TestimonialCardProps } from "./Abstract/IPost";
 import {
-    IconButton, Menu, MenuButton, MenuItem, MenuList, Box, Text, Avatar,
-    chakra,
-    Container,
-    Flex,
-    Icon,
-    SimpleGrid,
-    useColorModeValue,
-    Center,
-    Collapse,
     Button,
-
+    useDisclosure,
+    Box,
+    Flex,
+    useColorModeValue,
+    chakra,
+    Avatar,
+    SimpleGrid,
+    Image,
+    Collapse,
+    Icon,
+    Modal, ModalOverlay, ModalBody, ModalHeader, ModalContent, ModalFooter, ModalCloseButton,
+    Text,
+    List, ListItem, ListIcon,
+    Menu, MenuItem, MenuList, MenuButton,
+    IconButton
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon, HamburgerIcon, ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, HamburgerIcon, ArrowUpIcon, ArrowDownIcon, ViewIcon} from "@chakra-ui/icons";
 import { Link, useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage"
 import {useSelector} from "react-redux";
@@ -24,23 +29,75 @@ const YourPostComponent = (post: IPost) => {
 
     const store = useSelector((state: State) => state)
 
+    const [isLiked, setIsLiked] = useState<boolean>(post.IsLiked)
+    const [postId, setPostId] = useState<string>(post.PostId.toString())
+
     const youRole: any = store.Login
     const [show, setShow] = useState(false) 
     const handleToggle = () => setShow(!show)
 
     const [isMorreText, setIsMorreText] = useState <boolean>(false)
 
+    const [postLikeCount, setPostLikeCount] = useState <any>("")
+    const [postLikeBy, setPostLikeBy] = useState <any> ([])
+
     const backgrounds = [
         `url("data:image/svg+xml, %3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'560\' height=\'185\' viewBox=\'0 0 560 185\' fill=\'none\'%3E%3Cellipse cx=\'102.633\' cy=\'61.0737\' rx=\'102.633\' ry=\'61.0737\' fill=\'%23ED64A6\' /%3E%3Cellipse cx=\'399.573\' cy=\'123.926\' rx=\'102.633\' ry=\'61.0737\' fill=\'%23F56565\' /%3E%3Cellipse cx=\'366.192\' cy=\'73.2292\' rx=\'193.808\' ry=\'73.2292\' fill=\'%2338B2AC\' /%3E%3Cellipse cx=\'222.705\' cy=\'110.585\' rx=\'193.808\' ry=\'73.2292\' fill=\'%23ED8936\' /%3E%3C/svg%3E")`,
     ];
+    const likedPostPhoto = require("../../Assets/like.png")
+    const dontLikedPostPhoto = require("../../Assets/dontLike.png")
+    const commentPost = require("../../Assets/chat.png")
     useEffect(() => {
-        ChekLongDescription()
-    }, [])
-
-    const ChekLongDescription = () => {
+         const ChekLongDescription = async () => {
         if (post.PostContent.length > 100){
             setIsMorreText(true)
         }
+        await LikeCount ()
+    }
+        ChekLongDescription()
+    }, [])
+
+   
+    const LikeCount = async () => {
+
+        try{
+           const like =  await axios.get("http://194.181.109.242:3333/postLikedBy/" + postId)
+            console.log(like.data + postId)
+            setPostLikeCount(like.data.length)
+            setPostLikeBy(like.data.reverse())
+        }
+        catch {
+
+        }
+    }
+     const IsPostLiked = async () => {
+        try {
+            setPostId(post.PostId.toString())
+
+            const isLiked = await axios.post('http://194.181.109.242:3333/isPostLiked', {
+                "postId": post.PostId,
+                "login": store.Login
+            })
+            setIsLiked(isLiked.data)
+        }
+        catch {
+
+        }
+    }
+
+    const LikePost = async () => {
+
+        try {
+            await axios.post('http://194.181.109.242:3333/like', {
+                "postId": post.PostId,
+                "login": store.Login,
+                "token": store.Token
+            })
+
+            await IsPostLiked()
+            await LikeCount()
+        }
+        catch { }
     }
     const testimonials = [
         {
@@ -51,6 +108,8 @@ const YourPostComponent = (post: IPost) => {
 
         },
     ];
+
+        const { isOpen, onOpen, onClose } = useDisclosure()
     function TestimonialCard(props: TestimonialCardProps) {
         const { name, role, title, content, index, } = props;
         const navigate = useNavigate();
@@ -74,12 +133,14 @@ const YourPostComponent = (post: IPost) => {
             return postId.data
         }
 
-        return (
+//         
+
+return (
             <Flex
                 boxShadow={'lg'}
                 maxW={'540px'}
                 direction={{ base: 'column-reverse', md: 'row' }}
-                width={['20rem', '25rem']}
+                width={['20rem', '35rem']}
                 rounded={'xl'}
                 p={10}
                 justifyContent={'space-between'}
@@ -110,8 +171,9 @@ const YourPostComponent = (post: IPost) => {
                     left: 0,
                     backgroundImage: backgrounds[index % 4],
                 }}>
+
                 <Flex
-                    w={["15rem","25rem"]}
+                    w={["15","20rem"]}
                     direction={'column'}
                     textAlign={'left'}
                     justifyContent={'space-between'}>
@@ -122,22 +184,20 @@ const YourPostComponent = (post: IPost) => {
                         pb={4}>
                         {title}
                     </chakra.p>
-                    
                     <chakra.p
                         fontFamily={'Inter'}
                         fontWeight={'medium'}
-                        fontSize={'15px'}
-                        pb={4}>
-                        <Collapse startingHeight={isMorreText? 90 : "100%"} in={show}>
+                        fontSize={'15px'} 
+                        pb={4}> 
+                       <Collapse startingHeight={isMorreText? 90 : "100%"} in={show}>
                             {content}
                         </Collapse>
                         <Box color="purple.300"cursor={"pointer"} display={isMorreText? "contents" : "none"}  onClick={handleToggle} mt='2rem'>
                           <Icon as={show ? ArrowUpIcon : ArrowDownIcon }/>  Show {show ? 'Less' : 'More'}
                         </Box>
-
                     </chakra.p>
                     <chakra.p fontFamily={'Work Sans'} fontWeight={'bold'} fontSize={14}>
-                        {name}
+                        <Link to={"../account/" + name}>{name}</Link>
                         <chakra.span
                             fontFamily={'Inter'}
                             fontWeight={'medium'}
@@ -145,15 +205,41 @@ const YourPostComponent = (post: IPost) => {
                             {' '}
                             - {role}
                         </chakra.span>
-                    </chakra.p>
-                </Flex>
-                <Flex w={"15rem"}>
 
-                    <Box
-                        position={"absolute"}
-                        right={"10"}>
+                    </chakra.p>
+
+                    <Flex>
+                        <Box cursor="pointer" w={"3rem"} h={"3rem"} backgroundSize={"3rem"} bgRepeat={"none"} backgroundImage={isLiked ? likedPostPhoto : dontLikedPostPhoto} onClick={LikePost}></Box>
+                        <Link to={"/account/" + postId + "/comment"}><Image ml={3} w={"3rem"} h={"3rem"} src={commentPost}></Image></Link>
+                    </Flex>
+                    <Text cursor="pointer" onClick={onOpen}>liked by  {postLikeCount}</Text>
+
+                    <Modal isOpen={isOpen} onClose={onClose}>
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader>Likes</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                                <List>
+
+                                    { postLikeBy.map((persons :string) =>
+                                            <ListItem><ListIcon as={ViewIcon}/> <Link to={"../account/" +persons}>{persons}</Link></ListItem>
+                                        )}
+                                </List>
+                            </ModalBody>
+                        </ModalContent>
+                    </Modal>
+
+                </Flex>
+
                         <Menu>
                             <MenuButton
+                                // float={"right"}
+                                position={"absolute"}
+                                ml={["13rem", "0"]}
+                                top={"2rem"}
+                                w={"10%"}
+                                // position={"absolute"} right={"-16rem"}  bottom={"9rem"}
                                 as={IconButton}
                                 aria-label='Options'
                                 icon={<HamburgerIcon />}
@@ -168,13 +254,11 @@ const YourPostComponent = (post: IPost) => {
                                 </MenuItem>
                             </MenuList>
                         </Menu>
-                    </Box>
-                </Flex>
             </Flex>
         );
     }
-    return (
 
+    return (
         <>
 
             <Flex
@@ -185,14 +269,19 @@ const YourPostComponent = (post: IPost) => {
                 width={'full'}>
 
                 <SimpleGrid
+                    // columns={{ base: 1, xl: 2 }}
                     spacing={'20'}
                     mt={16}
                     mx={'auto'}>
                     {testimonials.map((cardInfo, index) => (
                         <TestimonialCard {...cardInfo} index={index} />
                     ))}
+                    
                 </SimpleGrid>
+
             </Flex>
+
+
         </>
     );
 };
