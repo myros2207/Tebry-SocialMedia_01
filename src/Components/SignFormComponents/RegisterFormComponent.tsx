@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, FocusEvent} from 'react';
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -19,20 +19,23 @@ import {
 const RegisterFormComponent = () => {
 
     const [firstName, setFirstName] = useState<string>("");
+    const [errorFirstName, setErrorFirstName] = useState<any>(" ");
 
     const [secondName, setSecondName] = useState<string>("");
+    const [errorSecondName, setErrorSecondName] = useState<any>(" ");
 
     const [login, setLogin] = useState<string>("");
+    const [errorLogin, setErrorLogin] = useState<any>(" ");
 
     const [password, setPassword] = useState<string>("");
 
     const [repeatPassword, setRepeatPassword] = useState<string>("")
 
-    const [errorRegister, setErrorRegister] = useState<any>("")
+    const [errorRegister, setErrorRegister] = useState<any>(" ")
 
     const [show, setShow] = useState<boolean>(false)
 
-    const [isDisable, setIsDisable] = useState(false)
+    const [completedError, setCompletedError] = useState<any>(" ")
 
     const navigate = useNavigate();
 
@@ -41,13 +44,46 @@ const RegisterFormComponent = () => {
     const OnChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFirstName(e.target.value);
     }
+    const OnBlurFirstName = (blur: React.FocusEvent<HTMLInputElement>) => {
+        if (firstName.length === 0 ) {
+            setErrorFirstName(
+                <Text color={"red"}>To pole musi być wypełnione</Text>)
+            console.log("testOYu")
+            return
+        }
+        else {
+            setErrorFirstName(" ")
+        }
+    }
 
     const OnChangeSecondName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSecondName(e.target.value);
     }
+    const OnBlurSecondName = (blur: React.FocusEvent<HTMLInputElement>) => {
+        if (secondName.length === 0 ) {
+            setErrorSecondName(
+                <Text color={"red"}>To pole musi być wypełnione</Text>)
+            console.log("testOYu")
+            return
+        }
+        else {
+            setErrorSecondName(" ")
+        }
+    }
 
     const OnChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLogin(e.target.value);
+    }
+    const OnBlurLogin = (blur: React.FocusEvent<HTMLInputElement>) => {
+        if (login.length === 0 ) {
+            setErrorLogin(
+                <Text color={"red"}>To pole musi być wypełnione</Text>)
+            console.log("testOYu")
+            return
+        }
+        else {
+            setErrorLogin(" ")
+        }
     }
 
     const OnChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,8 +105,12 @@ const RegisterFormComponent = () => {
 
     const Register = async () => {
 
-        if (login === "" || password === "") {
+        if (login === "" || password === "" || repeatPassword === "" || firstName === "" || secondName === "" ) {
             console.log("Incorrect login or password")
+            setErrorRegister(<Alert status='error'>
+                <AlertIcon />
+                <AlertTitle color={"black"}>Wszystko musi być wypełnione</AlertTitle>
+            </Alert>)
             return;
         }
         try {
@@ -81,10 +121,12 @@ const RegisterFormComponent = () => {
                 "password": password
             });
 
-            if (response.data === true && password === repeatPassword) {
+            if (response.data === true && password === repeatPassword ) {
                 navigate('/login');
-                return;
+                return
+
             }
+
             if (response.data === false) {
                 setErrorRegister(<Alert status='error'>
                     <AlertIcon />
@@ -92,17 +134,30 @@ const RegisterFormComponent = () => {
                 </Alert>)
             }
 
-            if ( password !== repeatPassword){
-                setErrorRegister(<Alert status='error'>
-                <AlertIcon />
-                <AlertTitle color={"black"}>Hasło się róznią</AlertTitle>
-            </Alert>)
-            }
         }
         catch {
 
         }
     }
+
+    const handleFocusEvent = (e: FocusEvent<HTMLInputElement>) => {
+        if   (password !== repeatPassword ) {
+            setErrorRegister(
+                <Alert status='error'>
+                    <AlertIcon />
+                    <AlertTitle color={"black"}>Hasło się róznią</AlertTitle>
+                </Alert>)
+        }
+        if   (password === repeatPassword ) {
+            setErrorRegister(
+                <Alert status='success'>
+                    <AlertIcon />
+                    <AlertTitle color={"black"}>Wszystko ok</AlertTitle>
+                </Alert>)
+
+        }
+
+    };
 
     const registerImage = require('../../Assets/register-ilustration.png')
 
@@ -128,19 +183,24 @@ const RegisterFormComponent = () => {
                             <Box>{errorRegister}</Box>
                             <label>Imię :</label>
                             <Input
-
                                 type="text"
                                 value={firstName}
                                 onChange={OnChangeFirstName}
                                 placeholder={"Podaj Imie"}
-                                bg={"red.100"} />
+                                bg={"red.100"}
+                                onBlur={OnBlurFirstName}
+                            />
+                            <Text>{errorFirstName}</Text>
                             <label>Nazwisko: </label>
                             <Input
                                 type="text"
                                 value={secondName}
                                 onChange={OnChangeSecondName}
                                 placeholder={"Podaj nazwisko"}
-                                bg={"red.100"} />
+                                bg={"red.100"}
+                                onBlur={OnBlurSecondName}
+                            />
+                            <Text>{errorSecondName}</Text>
                             <label>Login: </label>
 
                             <Input
@@ -148,7 +208,10 @@ const RegisterFormComponent = () => {
                                 value={login}
                                 onChange={OnChangeLogin}
                                 placeholder="enter login"
-                                bg={"red.100"} />
+                                bg={"red.100"}
+                                onBlur={OnBlurLogin}
+                            />
+                            <Text>{errorLogin}</Text>
                             <label>Hasło: </label>
 
                             <InputGroup size='md'>
@@ -159,6 +222,7 @@ const RegisterFormComponent = () => {
                                     value={password}
                                     onChange={OnChangePassword}
                                     bg={"red.100"}
+                                    onBlur={handleFocusEvent}
                                 />
 
                                 <InputRightElement width='4.5rem'>
@@ -175,7 +239,8 @@ const RegisterFormComponent = () => {
                            placeholder='Enter password'
                            value={repeatPassword}
                            onChange={OnChangeRepeatPassword}
-                           bg={"red.100"}></Input>
+                           bg={"red.100"}
+                           onBlur={handleFocusEvent}></Input>
                             <Button disabled={false} colorScheme={"yellow"} mt={"1rem"} onClick={Register}>Register</Button>
                             <Center flexDirection={"column"}>
                                 <Text bg={"white"}>Masz już konto w TEBRY?</Text>
