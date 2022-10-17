@@ -5,9 +5,19 @@ import {
     Button,
     useDisclosure,
     Box,
-    Flex, useColorModeValue, chakra, Avatar, SimpleGrid, Image, Collapse, Icon
+    Flex,
+    useColorModeValue,
+    chakra,
+    Avatar,
+    SimpleGrid,
+    Image,
+    Collapse,
+    Icon,
+    Modal, ModalOverlay, ModalBody, ModalHeader, ModalContent, ModalFooter, ModalCloseButton,
+    Text,
+    List, ListItem, ListIcon
 } from "@chakra-ui/react";
-import {ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
+import {ArrowUpIcon, ArrowDownIcon, ViewIcon} from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import {useSelector} from "react-redux";
 import {State} from "../../redux/reducers/MainReducer";
@@ -24,6 +34,9 @@ const UserPostComponent = (post: IPost) => {
 
     const [isMorreText, setIsMorreText] = useState <boolean>(false)
 
+    const [postLikeCount, setPostLikeCount] = useState <any>("")
+    const [postLikeBy, setPostLikeBy] = useState <any> ([])
+
     const backgrounds = [
         `url("data:image/svg+xml, %3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'560\' height=\'185\' viewBox=\'0 0 560 185\' fill=\'none\'%3E%3Cellipse cx=\'102.633\' cy=\'61.0737\' rx=\'102.633\' ry=\'61.0737\' fill=\'%23ED64A6\' /%3E%3Cellipse cx=\'399.573\' cy=\'123.926\' rx=\'102.633\' ry=\'61.0737\' fill=\'%23F56565\' /%3E%3Cellipse cx=\'366.192\' cy=\'73.2292\' rx=\'193.808\' ry=\'73.2292\' fill=\'%2338B2AC\' /%3E%3Cellipse cx=\'222.705\' cy=\'110.585\' rx=\'193.808\' ry=\'73.2292\' fill=\'%23ED8936\' /%3E%3C/svg%3E")`,
     ];
@@ -36,6 +49,7 @@ const UserPostComponent = (post: IPost) => {
             if(post.PostContent.length > 230){
                 setIsMorreText(true)
             }
+            await LikeCount ()
         }
        ChekLongDescription()
     }, [])
@@ -65,14 +79,23 @@ const UserPostComponent = (post: IPost) => {
             })
 
             await IsPostLiked()
+            await LikeCount()
         }
         catch { }
     }
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const [scrollBehavior, setScrollBehavior] = useState<any>('inside')
+    const LikeCount = async () => {
 
-    const btnRef = useRef<any>(null)
+        try{
+           const like =  await axios.get("http://194.181.109.242:3333/postLikedBy/" + postId)
+            console.log(like.data + postId)
+            setPostLikeCount(like.data.length)
+            setPostLikeBy(like.data)
+        }
+        catch {
+
+        }
+    }
 
     const testimonials = [
         {
@@ -84,12 +107,12 @@ const UserPostComponent = (post: IPost) => {
         },
 
     ];
+
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
     function TestimonialCard(props: TestimonialCardPropsUser) {
         const { name, role, title, content, avatar, index, } = props;
 
-
-
-        const pageWidth = document.documentElement.scrollWidth.toString() + "px"
         return (
             <Flex
                 boxShadow={'lg'}
@@ -159,11 +182,30 @@ const UserPostComponent = (post: IPost) => {
                             {' '}
                             - {role}
                         </chakra.span>
+
                     </chakra.p>
+
                     <Flex>
                         <Box cursor="pointer" w={"3rem"} h={"3rem"} backgroundSize={"3rem"} bgRepeat={"none"} backgroundImage={isLiked ? likedPostPhoto : dontLikedPostPhoto} onClick={LikePost}></Box>
                         <Link to={"/account/" + postId + "/comment"}><Image ml={3} w={"3rem"} h={"3rem"} src={commentPost}></Image></Link>
                     </Flex>
+                    <Text cursor="pointer" onClick={onOpen}>liked by  {postLikeCount}</Text>
+
+                    <Modal isOpen={isOpen} onClose={onClose}>
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader>Likes</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                                <List>
+
+                                    { postLikeBy.map((persons :string) =>
+                                            <ListItem><ListIcon as={ViewIcon}/> <Link to={"../account/" +persons}>{persons}</Link></ListItem>
+                                        )}
+                                </List>
+                            </ModalBody>
+                        </ModalContent>
+                    </Modal>
                 </Flex>
 
                 <Flex w={"15rem"}>
