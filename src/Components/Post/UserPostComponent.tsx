@@ -90,7 +90,7 @@ const UserPostComponent = (post: IPost) => {
            const like =  await axios.get("http://194.181.109.242:3333/postLikedBy/" + postId)
             console.log(like.data + postId)
             setPostLikeCount(like.data.length)
-            setPostLikeBy(like.data)
+            setPostLikeBy(like.data.reverse())
         }
         catch {
 
