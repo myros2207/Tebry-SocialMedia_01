@@ -175,7 +175,17 @@ const RegisterFormComponent = () => {
                         bgRepeat={"no - repeat"}
                         bgSize={"cover"}
                         bgImage={registerImage}></Box>
-                    <Box position={"relative"} zIndex="4" mt={["10rem", "10rem"]} >
+                    <Box 
+                        position={"relative"} 
+                        zIndex="4" 
+                        h={"100vh"}
+                        display={"flex"}
+                        flexDirection={"column"}
+                        alignItems={"center"}
+                        alignContent={"center"}
+                        justifyContent={"center"}
+                        justifyItems={"center"}
+                    >
 
                         <Container borderRadius={"10"} boxShadow='dark-lg' bg={"white"} w={["100%", "70%"]} color={"black."} >
                             <Center flexDirection={"column"}>< Text mt="5 " fontSize='4xl'>Witamy w TEBRY</Text><
