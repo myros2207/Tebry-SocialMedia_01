@@ -108,16 +108,15 @@ const LoginFormComponent = () => {
                         bgSize={"cover"}
                         bgImage={loginImage}></Box>
                     <Box 
-                    position={"relative"} zIndex="4" 
+                        position={"relative"} 
+                        zIndex="4" 
                         h={"100vh"}
-
                         display={"flex"}
                         flexDirection={"column"}
                         alignItems={"center"}
                         alignContent={"center"}
                         justifyContent={"center"}
                         justifyItems={"center"}
-                     
                     >
 
                         <Container borderRadius={"10"} boxShadow='dark-lg' bg={"white"} w={["100%", "70%"]} color={"black."} >

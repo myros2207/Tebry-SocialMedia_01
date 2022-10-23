@@ -5,7 +5,7 @@ import PostCreatorComponent from "./Components/Post/PostCreatorComponent/PostCre
 import axios from "axios";
 import UserComponent from "./Components/User/UserComponent";
 import RegisterFormComponent from "./Components/SignFormComponents/RegisterFormComponent";
-import EditPostComponent from "./Components/Post/EditPostComponent/EditPostComponent";
+
 import StartPage from "./Components/StartPage";
 import CreateCommentComponent from "./Components/Comments/CreateCommentComponent";
 import NewsCreatorComponent from "./Components/News/NewsCreatorComponent";
@@ -58,9 +58,6 @@ axios.defaults.headers.common['ApiKey'] = 'LS3ckH3qhLrp7nPYX2KspxrA'
                 <UserComponent></UserComponent>
             }></Route>
 
-            <Route path="/myAccount/posts/editpost/:postTitle&:postDescription" element={
-                <EditPostComponent></EditPostComponent>
-            }></Route>
             <Route path="/account/:postId/comment" element={
                 <CreateCommentComponent></CreateCommentComponent>
             }></Route>

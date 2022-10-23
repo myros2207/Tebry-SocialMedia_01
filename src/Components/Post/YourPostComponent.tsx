@@ -17,10 +17,10 @@ import {
     Text,
     List, ListItem, ListIcon,
     Menu, MenuItem, MenuList, MenuButton,
-    IconButton
+    IconButton, Input, Textarea
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon, HamburgerIcon, ArrowUpIcon, ArrowDownIcon, ViewIcon} from "@chakra-ui/icons";
-import { Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import secureLocalStorage from "react-secure-storage"
 import {useSelector} from "react-redux";
 import {State} from "../../redux/reducers/MainReducer";
@@ -28,6 +28,7 @@ import {State} from "../../redux/reducers/MainReducer";
 const YourPostComponent = (post: IPost) => {
 
     const store = useSelector((state: State) => state)
+    const navigate = useNavigate();
 
     const [isLiked, setIsLiked] = useState<boolean>(post.IsLiked)
     const [postId, setPostId] = useState<string>(post.PostId.toString())
@@ -40,6 +41,15 @@ const YourPostComponent = (post: IPost) => {
 
     const [postLikeCount, setPostLikeCount] = useState <any>("")
     const [postLikeBy, setPostLikeBy] = useState <any> ([])
+
+    const [title, setTitle] = useState<string>(post.PostTitle)
+    const [content, setContent] = useState<string>(post.PostContent)
+
+    const [isEdit, setIsEdit] = useState <boolean>(false)
+
+
+
+
 
     const backgrounds = [
         `url("data:image/svg+xml, %3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'560\' height=\'185\' viewBox=\'0 0 560 185\' fill=\'none\'%3E%3Cellipse cx=\'102.633\' cy=\'61.0737\' rx=\'102.633\' ry=\'61.0737\' fill=\'%23ED64A6\' /%3E%3Cellipse cx=\'399.573\' cy=\'123.926\' rx=\'102.633\' ry=\'61.0737\' fill=\'%23F56565\' /%3E%3Cellipse cx=\'366.192\' cy=\'73.2292\' rx=\'193.808\' ry=\'73.2292\' fill=\'%2338B2AC\' /%3E%3Cellipse cx=\'222.705\' cy=\'110.585\' rx=\'193.808\' ry=\'73.2292\' fill=\'%23ED8936\' /%3E%3C/svg%3E")`,
@@ -102,35 +112,74 @@ const YourPostComponent = (post: IPost) => {
     const testimonials = [
         {
             name: 'you',
-            title: post.PostTitle,
+            title: title,
             role: youRole,
-            content: post.PostContent,
+            content: content
 
         },
     ];
 
         const { isOpen, onOpen, onClose } = useDisclosure()
+
+        // const { isOpenDelete, onOpenDelete, onCloseDelete } = useDisclosure()
+
+
+
     function TestimonialCard(props: TestimonialCardProps) {
         const { name, role, title, content, index, } = props;
-        const navigate = useNavigate();
+
 
         const DeletePost = async () => {
-            const postId = await axios.post('http://194.181.109.242:3333/findPost', {
-                "title": title,
-                "description": content,
-                "author": store.Login
-            });
-
-
             await axios.delete('http://194.181.109.242:3333/removePost', {
                 data: {
-                    "postId": postId.data.toString(),
+                    "postId": post.PostId,
                     "login": store.Login,
                     "token": store.Token,
                 }
             });
             window.location.reload();
-            return postId.data
+
+        }
+
+
+        const store = useSelector((state: State) => state)
+
+
+
+        //@ts-ignore
+        const [newTitle, setNewTitle] = useState<string>(() => {
+            return post.PostTitle;
+        });
+
+        //@ts-ignore
+        const [newContent, setNewContent] = useState<string>(() => {
+            return post.PostContent;
+        });
+
+        const OnChangeNewTitleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setNewTitle(e.target.value);
+        }
+
+        const OnChangeNewContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setNewContent(e.target.value);
+        }
+
+        const OpenEditPost = () => {
+            setIsEdit(true)
+        }
+        const SendEditPost = async () => {
+            const response = await axios.post("http://194.181.109.242:3333/post", {
+                "postId": post.PostId,
+                "title": newTitle,
+                "content": newContent,
+                "login": store.Login,
+                "token": store.Token
+            });
+            setIsEdit(false)
+            setTitle(newTitle)
+            setContent(newContent)
+            setNewTitle(newTitle)
+            setNewContent(newContent)
         }
 
 //         
@@ -173,18 +222,23 @@ return (
                 }}>
 
                 <Flex
-                    w={["15","20rem"]}
+                    w={isEdit? ["15rem","20rem"] : ["13rem", "20rem"]}
                     direction={'column'}
                     textAlign={'left'}
                     justifyContent={'space-between'}>
+
+                    <Box>
                     <chakra.p
+                        display={isEdit ? "none": "content"}
                         fontFamily={'Inter'}
                         fontWeight={'medium'}
                         fontSize={'25px'}
                         pb={4}>
                         {title}
                     </chakra.p>
+                        <Textarea mb={5} display={isEdit ? "content": "none"} placeholder="New Title" onChange={OnChangeNewTitleInput} value={newTitle}></Textarea>
                     <chakra.p
+                        display={isEdit ? "none": "content"}
                         fontFamily={'Inter'}
                         fontWeight={'medium'}
                         fontSize={'15px'} 
@@ -196,9 +250,12 @@ return (
                           <Icon as={show ? ArrowUpIcon : ArrowDownIcon }/>  Show {show ? 'Less' : 'More'}
                         </Box>
                     </chakra.p>
+                        <Textarea display={isEdit ? "content": "none"} placeholder="New Content" onChange={OnChangeNewContent} value={newContent}></Textarea>
+                        </Box>
                     <chakra.p fontFamily={'Work Sans'} fontWeight={'bold'} fontSize={14}>
                         <Link to={"../account/" + name}>{name}</Link>
                         <chakra.span
+                            display={isEdit ? "none": "content"}
                             fontFamily={'Inter'}
                             fontWeight={'medium'}
                             color={'gray.500'}>
@@ -208,15 +265,19 @@ return (
 
                     </chakra.p>
 
-                    <Flex>
+                    <Flex display={isEdit ? "none": "flex"}>
                         <Box cursor="pointer" w={"3rem"} h={"3rem"} backgroundSize={"3rem"} bgRepeat={"none"} backgroundImage={isLiked ? likedPostPhoto : dontLikedPostPhoto} onClick={LikePost}></Box>
                         <Link to={"/account/" + postId + "/comment"}><Image ml={3} w={"3rem"} h={"3rem"} src={commentPost}></Image></Link>
                     </Flex>
-                    <Text cursor="pointer" onClick={onOpen}>liked by  {postLikeCount}</Text>
+                    <Text  display={isEdit ? "none": "content"} cursor="pointer" onClick={onOpen}>liked by  {postLikeCount}</Text>
 
+                    <Button mb={3} display={isEdit ? "flex": "none"} onClick={SendEditPost}>End edit post</Button>
+                    <Button display={isEdit ? "flex": "none"} onClick={DeletePost}>Delete post</Button>
+
+                    <Box display={isEdit ? "none": "content"} >
                     <Modal isOpen={isOpen} onClose={onClose}>
                         <ModalOverlay />
-                        <ModalContent>
+                        <ModalContent display={isEdit ? "none": "content"}>
                             <ModalHeader>Likes</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
@@ -229,11 +290,11 @@ return (
                             </ModalBody>
                         </ModalContent>
                     </Modal>
-
+                    </Box>
                 </Flex>
 
                         <Menu>
-                            <MenuButton
+                            <MenuButton display={isEdit ? "none": "content"}
                                 // float={"right"}
                                 position={"absolute"}
                                 ml={["13rem", "25rem"]}
@@ -249,7 +310,9 @@ return (
                                 <MenuItem icon={<DeleteIcon />} onClick={DeletePost}>
                                     <Text>Delete</Text>
                                 </MenuItem>
-                                <MenuItem icon={<EditIcon />} onClick={() => { navigate("../myAccount/posts/editPost/" + post.PostTitle.toString() + "&" + post.PostContent.toString()) }}>
+                                <MenuItem icon={<EditIcon />} onClick={OpenEditPost}>
+                                    {/*() => { navigate("../myAccount/posts/editPost/" + post.PostTitle.toString() + "&" + post.PostContent.toString()) }*/}
+
                                     <Text>Edit Post</Text>
                                 </MenuItem>
                             </MenuList>
