@@ -99,7 +99,7 @@ const NavbarComponent =(props: ButtonProps) => {
                         onClick={isOpen ? onClose : onOpen}
                     />
                     <HStack spacing={8} alignItems={'center'}>
-                        <LinkRoute to={"/home"}><Box onClick={() => {window.location.reload()}} ml={["6rem", "0"]}><Image boxSize={'3rem'} src={logo}/></Box></LinkRoute>
+                        <LinkRoute to={"/home"}><Box ml={["6rem", "0"]}><Image boxSize={'3rem'} src={logo}/></Box></LinkRoute>
                         <HStack
                             as={'nav'}
                             spacing={4}
