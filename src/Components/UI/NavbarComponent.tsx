@@ -75,6 +75,7 @@ const NavbarComponent =(props: ButtonProps) => {
            </LinkRoute>)
        }
 
+
     },);
 
 
@@ -89,11 +90,10 @@ const NavbarComponent =(props: ButtonProps) => {
     }
 
     const HomeImage = () => {
+
+        window.scrollTo({top:0, behavior: 'smooth'})
         if  (window.location.toString() === "http://localhost:3000/home" || window.location.toString() === "http://194.181.109.242:3000/home" ){
             window.location.reload()
-            window.scrollTo({top:0, behavior: 'smooth'})
-
-
         }
         else {
             navigate("/home")
