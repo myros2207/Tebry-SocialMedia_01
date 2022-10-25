@@ -10,7 +10,7 @@ const StartPage = () => {
     useEffect(() => {
         const ChekLogin =  () => {
 
-            if (  secureLocalStorage.getItem("Login") === " " || secureLocalStorage.getItem("Login") === null) {
+            if ( localStorage.getItem("Login") === " " || localStorage.getItem("Login") === null) {
                 navigate("/login")
                 return
             }

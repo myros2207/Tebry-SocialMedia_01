@@ -7,8 +7,7 @@ export interface IPost{
 }
 
 export interface TestimonialCardProps {
-    name: string;
-    role: string;
+
     title: string;
     content: string;
     index: number;

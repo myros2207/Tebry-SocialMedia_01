@@ -35,6 +35,10 @@ const NavbarComponent =(props: ButtonProps) => {
 
     const navigate = useNavigate();
 
+    console.log(window.location.toString())
+
+
+
     useEffect(() => {
        if (store.Role == "4"){
            setRoleNavbar(
@@ -84,6 +88,20 @@ const NavbarComponent =(props: ButtonProps) => {
         }
     }
 
+    const HomeImage = () => {
+        if  (window.location.toString() === "http://localhost:3000/home" || window.location.toString() === "http://194.181.109.242:3000/home" ){
+            window.location.reload()
+            window.scrollTo({top:0, behavior: 'smooth'})
+
+
+        }
+        else {
+            navigate("/home")
+        }
+    }
+
+
+
     const logo = require("../../Assets/Logo3.png")
     return (
         <>
@@ -98,8 +116,7 @@ const NavbarComponent =(props: ButtonProps) => {
                         display={{ md: 'none' }}
                         onClick={isOpen ? onClose : onOpen}
                     />
-                    <HStack spacing={8} alignItems={'center'}>
-                        <LinkRoute to={"/home"}><Box ml={["6rem", "0"]}><Image boxSize={'3rem'} src={logo}/></Box></LinkRoute>
+                    <HStack spacing={8} alignItems={'center'}><Box cursor={"pointer"} onClick={HomeImage} ml={["6rem", "0"]}><Image boxSize={'3rem'} src={logo}/></Box>
                         <HStack
                             as={'nav'}
                             spacing={4}

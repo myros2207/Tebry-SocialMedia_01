@@ -33,7 +33,6 @@ const YourPostComponent = (post: IPost) => {
     const [isLiked, setIsLiked] = useState<boolean>(post.IsLiked)
     const [postId, setPostId] = useState<string>(post.PostId.toString())
 
-    const youRole: any = store.Login
     const [show, setShow] = useState(false) 
     const handleToggle = () => setShow(!show)
 
@@ -111,9 +110,8 @@ const YourPostComponent = (post: IPost) => {
     }
     const testimonials = [
         {
-            name: 'you',
             title: title,
-            role: youRole,
+
             content: content
 
         },
@@ -126,7 +124,7 @@ const YourPostComponent = (post: IPost) => {
 
 
     function TestimonialCard(props: TestimonialCardProps) {
-        const { name, role, title, content, index, } = props;
+        const { title, content, index, } = props;
 
 
         const DeletePost = async () => {
@@ -222,7 +220,7 @@ return (
                 }}>
 
                 <Flex
-                    w={isEdit? ["15rem","20rem"] : ["13rem", "20rem"]}
+                    w={isEdit? ["15rem","28rem"] : ["13rem", "20rem"]}
                     direction={'column'}
                     textAlign={'left'}
                     justifyContent={'space-between'}>
@@ -252,18 +250,7 @@ return (
                     </chakra.p>
                         <Textarea display={isEdit ? "content": "none"} placeholder="New Content" onChange={OnChangeNewContent} value={newContent}></Textarea>
                         </Box>
-                    <chakra.p fontFamily={'Work Sans'} fontWeight={'bold'} fontSize={14}>
-                        <Link to={"../account/" + name}>{name}</Link>
-                        <chakra.span
-                            display={isEdit ? "none": "content"}
-                            fontFamily={'Inter'}
-                            fontWeight={'medium'}
-                            color={'gray.500'}>
-                            {' '}
-                            - {role}
-                        </chakra.span>
 
-                    </chakra.p>
 
                     <Flex display={isEdit ? "none": "flex"}>
                         <Box cursor="pointer" w={"3rem"} h={"3rem"} backgroundSize={"3rem"} bgRepeat={"none"} backgroundImage={isLiked ? likedPostPhoto : dontLikedPostPhoto} onClick={LikePost}></Box>

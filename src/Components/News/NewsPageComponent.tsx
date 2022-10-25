@@ -8,8 +8,8 @@ const NewsPageComponent = () => {
     return (
         <>
             <NavbarComponent />
-            <Center>
-                <Text textAlign={"center"} fontFamily={"Anton"} mt="4" fontSize={["3rem","5rem"]}>Time to news </Text>
+            <Center pt={["4.5rem", "0"]}>
+                <Text textAlign={"center"} fontFamily={"Anton"} mt={["0","4"]} fontSize={["3rem","5rem"]}>Time to news </Text>
             </Center>
             <NewsListComponent />
             <FooterComponent />
