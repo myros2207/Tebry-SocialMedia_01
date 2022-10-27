@@ -35,10 +35,6 @@ const NavbarComponent =(props: ButtonProps) => {
 
     const navigate = useNavigate();
 
-    console.log(window.location.toString())
-
-
-
     useEffect(() => {
        if (store.Role == "4"){
            setRoleNavbar(
